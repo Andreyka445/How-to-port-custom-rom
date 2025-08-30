@@ -7,11 +7,16 @@
 Портировать кастомную прошивку можно и без TWRP, просто собрав новый super.img в котором и будет наш порт, а если есть TWRP, который хоть что-то умеет прошивать то можно собрать прошиваемый .zip архив.
 
  # 🛠️ Инструменты который нам нужны
- Андроид кухня, которая умеет распаковывать и запакоывать разделы и собирать super.img.
+ [UKA ( Unpacker Kitchen for Android )](https://4pda.to/forum/index.php?showtopic=900084)
+
+ [MIK ( Multi Image Kitchen ) только для Windows](https://github.com/CryptoNickSoft/MIK)
+
+ [MIO Kitchen Linux/Windows](https://github.com/ColdWindScholar/MIO-KITCHEN-SOURCE)
  
  [Termux](https://github.com/termux/termux-app/releases), если портируем на телефоне
  
- Инструменты adb&fastboot
+ [Platform-tools ( Adb & Fastboot )](https://developer.android.com/tools/releases/platform-tools)
+
  
  Телефон на который будем портировать
  
@@ -19,20 +24,6 @@
 
  
 [![tecno-pova5-10.jpg](https://i.postimg.cc/CLLkxL0H/tecno-pova5-10.jpg)](https://postimg.cc/rz3KhTKK)
-
- # Кухни, которые работают на пк
- [MIO-kitchen](https://github.com/ColdWindScholar/MIO-KITCHEN-SOURCE)
- 
- [MIK](https://github.com/CryptoNickSoft/MIK)
- 
-# Кухня, которая работает на телефоне
-
-[UKA](https://4pda.to/forum/index.php?showtopic=900084) ___Только с ROOT правами___
-
-# Platform-tools для прошивки  super.img
-[PT](https://developer.android.com/tools/releases/platform-tools)
-
-Теперь, когда всё готово можем приступать к портированию!
 
 # Выбор прошивки, которую будем портировать
 Для портирования прошивок A15 qpr1 и ниже подойдёт ваш стоковый vendor, но для того чтобы запусть А15 qpr2 нужен oss vendor, его можно взять из любой кастомной прошивки под ваш телефон.

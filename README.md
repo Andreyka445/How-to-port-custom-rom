@@ -1,12 +1,33 @@
 # Учимся портировать кастомные прошивки
 Иструкция подходит для телефонов с разделом _SUPER_, внутри которого есть разделы _system.img, system_ext.img, product.img_
+
 # Содержание
+[Зачем портировать прошивки?](https://github.com/Andreyka445/How-to-port-custom-rom/tree/main#%D0%B7%D0%B0%D1%87%D0%B5%D0%BC-%D0%BF%D0%BE%D1%80%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D1%82%D1%8C-%D0%BF%D1%80%D0%BE%D1%88%D0%B8%D0%B2%D0%BA%D0%B8-%D0%B5%D1%81%D0%BB%D0%B8-%D0%B5%D1%81%D1%82%D1%8C-%D1%83%D0%B6%D0%B5-%D1%81%D0%BE%D0%B1%D1%80%D0%B0%D0%BD%D0%BD%D1%8B%D0%B5)
+
+[Инструменты](https://github.com/Andreyka445/How-to-port-custom-rom/tree/main#%EF%B8%8F-%D0%B8%D0%BD%D1%81%D1%82%D1%80%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B-%D0%BA%D0%BE%D1%82%D0%BE%D1%80%D1%8B%D0%B9-%D0%BD%D0%B0%D0%BC-%D0%BD%D1%83%D0%B6%D0%BD%D1%8B)
+
+[Выбор прошивки](https://github.com/Andreyka445/How-to-port-custom-rom/tree/main#%D0%B2%D1%8B%D0%B1%D0%BE%D1%80-%D0%BF%D1%80%D0%BE%D1%88%D0%B8%D0%B2%D0%BA%D0%B8-%D0%BA%D0%BE%D1%82%D0%BE%D1%80%D1%83%D1%8E-%D0%B1%D1%83%D0%B4%D0%B5%D0%BC-%D0%BF%D0%BE%D1%80%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D1%82%D1%8C)
+
+[Портируем используя UKA](https://github.com/Andreyka445/How-to-port-custom-rom/tree/main#%D0%BF%D0%BE%D1%80%D1%82%D0%B8%D1%80%D1%83%D0%B5%D0%BC-%D0%B8%D1%81%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D1%83%D1%8F-uka--%D0%BF%D0%BE%D1%80%D1%82%D0%B8%D1%80%D1%83%D0%B5%D0%BC-%D0%BD%D0%B0-%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD%D0%B5-)
+
+[Портируем используя MIK](https://github.com/Andreyka445/How-to-port-custom-rom/tree/main#%D0%BF%D0%BE%D1%80%D1%82%D0%B8%D1%80%D1%83%D0%B5%D0%BC-%D0%B8%D1%81%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D1%83%D1%8F-mik-%D0%BD%D0%B0-%D0%BF%D0%BA-%D1%81-windows)
+
+[Редактирование образов](https://github.com/Andreyka445/How-to-port-custom-rom/tree/main#%D1%80%D0%B5%D0%B4%D0%B0%D0%BA%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5-%D0%BE%D0%B1%D1%80%D0%B0%D0%B7%D0%BE%D0%B2)
+
+[Сборка нового super.img](https://github.com/Andreyka445/How-to-port-custom-rom/tree/main#%D1%81%D0%B1%D0%BE%D1%80%D0%BA%D0%B0-%D0%BD%D0%BE%D0%B2%D0%BE%D0%B3%D0%BE-superimg)
+
+[Прошиваем новый super.img](https://github.com/Andreyka445/How-to-port-custom-rom/tree/main#%D0%BF%D1%80%D0%BE%D1%88%D0%B8%D0%B2%D0%BA%D0%B0-superimg-%D1%81-%D0%BF%D0%BE%D1%80%D1%82%D0%BE%D0%BC)
+
+[Портируем с использованием MIK](https://github.com/Andreyka445/How-to-port-custom-rom/tree/main#%D0%BF%D0%BE%D1%80%D1%82%D0%B8%D1%80%D1%83%D0%B5%D0%BC-%D0%B8%D1%81%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D1%83%D1%8F-mik-%D0%BD%D0%B0-%D0%BF%D0%BA-%D1%81-windows)
+
+[Портируем с использованием MIO](https://github.com/Andreyka445/How-to-port-custom-rom/tree/main#%D0%BF%D0%BE%D1%80%D1%82%D0%B8%D1%80%D1%83%D0%B5%D0%BC-%D0%B8%D1%81%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D1%83%D1%8F-mio-%D0%BD%D0%B0-%D0%BF%D0%BA-%D1%81-linuxwindows)
+
 
 # Зачем портировать прошивки, если есть уже собранные?
 Ответ: Не все телефоны хорошо поддерживаются сообществом и не все имееют даже неоффициальную сборку TWRP, в которой работают все функции.
 Портировать кастомную прошивку можно и без TWRP, просто собрав новый super.img в котором и будет наш порт, а если есть TWRP, который хоть что-то умеет прошивать то можно собрать прошиваемый .zip архив.
 
- # 🛠️ Инструменты который нам нужны
+ # 🛠️ Инструменты которые нам нужны
  [UKA ( Unpacker Kitchen for Android )](https://4pda.to/forum/index.php?showtopic=900084)
 
  [MIK ( Multi Image Kitchen ) только для Windows](https://github.com/CryptoNickSoft/MIK)

@@ -44,7 +44,7 @@
  ___В моём случае это Tecno Pova 5 [LH7n/Rozen]___
 
  
-[![tecno-pova5-10.jpg](https://i.postimg.cc/CLLkxL0H/tecno-pova5-10.jpg)](https://postimg.cc/rz3KhTKK)
+[![pova-5.png](https://i.postimg.cc/K80bbpWZ/pova-5.png)](https://postimg.cc/18V2cBPT)
 
 # Выбор прошивки, которую будем портировать
 Для портирования прошивок A15 qpr1 и ниже подойдёт ваш стоковый vendor, но для того чтобы запусть А15 qpr2 нужен oss vendor, его можно взять из любой кастомной прошивки под ваш телефон.

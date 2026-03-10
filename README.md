@@ -1,187 +1,328 @@
-# Учимся портировать кастомные прошивки
-Иструкция подходит для телефонов с разделом _SUPER_, внутри которого есть разделы _system.img, system_ext.img, product.img_
+# 🚀 Учимся портировать кастомные прошивки
 
-# Содержание
-[Зачем портировать прошивки?](https://github.com/Andreyka445/How-to-port-custom-rom/tree/main#%D0%B7%D0%B0%D1%87%D0%B5%D0%BC-%D0%BF%D0%BE%D1%80%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D1%82%D1%8C-%D0%BF%D1%80%D0%BE%D1%88%D0%B8%D0%B2%D0%BA%D0%B8-%D0%B5%D1%81%D0%BB%D0%B8-%D0%B5%D1%81%D1%82%D1%8C-%D1%83%D0%B6%D0%B5-%D1%81%D0%BE%D0%B1%D1%80%D0%B0%D0%BD%D0%BD%D1%8B%D0%B5)
+> **Инструкция подходит для телефонов с разделом SUPER, внутри которого есть разделы system.img, system_ext.img, product.img**
 
-[Инструменты](https://github.com/Andreyka445/How-to-port-custom-rom/tree/main#%EF%B8%8F-%D0%B8%D0%BD%D1%81%D1%82%D1%80%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B-%D0%BA%D0%BE%D1%82%D0%BE%D1%80%D1%8B%D0%B9-%D0%BD%D0%B0%D0%BC-%D0%BD%D1%83%D0%B6%D0%BD%D1%8B)
+## 📚 Содержание
+- [Зачем это нужно](#зачем-это-нужно)
+- [Инструменты](#🛠️-инструменты)
+- [Выбор прошивки-донора](#🎯-выбор-прошивки-донора)
+- [Важная теория](#🧠-важная-теория)
+- [Способы портирования](#-способы-портирования)
+  - [1️⃣ UKA (на телефоне)](#1️⃣-uka-на-телефоне)
+  - [2️⃣ MIK (Windows)](#2️⃣-mik-windows)
+  - [3️⃣ MIO Kitchen (Windows/Linux)](#3️⃣-mio-kitchen-windowslinux)
+- [Прошивка готового порта](#📱-прошивка-готового-порта)
+- [Решение проблем](#🆘-решение-проблем)
 
-[Выбор прошивки](https://github.com/Andreyka445/How-to-port-custom-rom/tree/main#%D0%B2%D1%8B%D0%B1%D0%BE%D1%80-%D0%BF%D1%80%D0%BE%D1%88%D0%B8%D0%B2%D0%BA%D0%B8-%D0%BA%D0%BE%D1%82%D0%BE%D1%80%D1%83%D1%8E-%D0%B1%D1%83%D0%B4%D0%B5%D0%BC-%D0%BF%D0%BE%D1%80%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D1%82%D1%8C)
+---
 
-[Портируем используя UKA](https://github.com/Andreyka445/How-to-port-custom-rom/tree/main#%D0%BF%D0%BE%D1%80%D1%82%D0%B8%D1%80%D1%83%D0%B5%D0%BC-%D0%B8%D1%81%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D1%83%D1%8F-uka--%D0%BF%D0%BE%D1%80%D1%82%D0%B8%D1%80%D1%83%D0%B5%D0%BC-%D0%BD%D0%B0-%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD%D0%B5-)
+## Зачем это нужно
 
-[Портируем используя MIK](https://github.com/Andreyka445/How-to-port-custom-rom/tree/main#%D0%BF%D0%BE%D1%80%D1%82%D0%B8%D1%80%D1%83%D0%B5%D0%BC-%D0%B8%D1%81%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D1%83%D1%8F-mik-%D0%BD%D0%B0-%D0%BF%D0%BA-%D1%81-windows)
+Не все телефоны имеют готовые кастомные прошивки. Этот метод позволяет взять прошивку от **другого устройства (донора)** и адаптировать её под **своё железо**, сохранив **родной vendor** (драйверы камеры, сенсора, связи и т.д.).
 
-[Редактирование образов](https://github.com/Andreyka445/How-to-port-custom-rom/tree/main#%D1%80%D0%B5%D0%B4%D0%B0%D0%BA%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5-%D0%BE%D0%B1%D1%80%D0%B0%D0%B7%D0%BE%D0%B2)
+**Результат:** Вы получаете прошивку с интерфейсом и фишками донора (например, HyperOS), которая работает на вашем телефоне.
 
-[Сборка нового super.img](https://github.com/Andreyka445/How-to-port-custom-rom/tree/main#%D1%81%D0%B1%D0%BE%D1%80%D0%BA%D0%B0-%D0%BD%D0%BE%D0%B2%D0%BE%D0%B3%D0%BE-superimg)
+---
 
-[Прошиваем новый super.img](https://github.com/Andreyka445/How-to-port-custom-rom/tree/main#%D0%BF%D1%80%D0%BE%D1%88%D0%B8%D0%B2%D0%BA%D0%B0-superimg-%D1%81-%D0%BF%D0%BE%D1%80%D1%82%D0%BE%D0%BC)
+## 🛠️ Инструменты
 
-[Портируем с использованием MIK](https://github.com/Andreyka445/How-to-port-custom-rom/tree/main#%D0%BF%D0%BE%D1%80%D1%82%D0%B8%D1%80%D1%83%D0%B5%D0%BC-%D0%B8%D1%81%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D1%83%D1%8F-mik-%D0%BD%D0%B0-%D0%BF%D0%BA-%D1%81-windows)
+| Инструмент | Назначение | Ссылка |
+|------------|------------|--------|
+| **UKA** | Портирование **на телефоне** (нужен Root) | [4PDA](https://4pda.to/forum/index.php?showtopic=900084) |
+| **MIK** | Портирование на **Windows** (простой) | [4PDA](https://4pda.to/forum/index.php?showtopic=1017768) |
+| **MIO Kitchen** | Портирование на **Windows/Linux** (самый мощный) | [GitHub](https://github.com/ColdWindScholar/MIO-KITCHEN-SOURCE) |
+| **MT Manager** | Файловый менеджер на телефоне | [4PDA](https://4pda.to/forum/index.php?showtopic=548542) |
+| **Platform-tools** | ADB и Fastboot | [Google](https://developer.android.com/tools/releases/platform-tools) |
+| **Payload Dumper** | Распаковка payload.bin | [GitHub](https://github.com/vm03/payload_dumper) |
 
-[Портируем с использованием MIO](https://github.com/Andreyka445/How-to-port-custom-rom/tree/main#%D0%BF%D0%BE%D1%80%D1%82%D0%B8%D1%80%D1%83%D0%B5%D0%BC-%D0%B8%D1%81%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D1%83%D1%8F-mio-%D0%BD%D0%B0-%D0%BF%D0%BA-%D1%81-linuxwindows)
+---
+
+## 🎯 Выбор прошивки-донора
+
+### 🔥 Золотые правила
+1. **Чипсет:** Желательно **тот же производитель** (Unisoc → Unisoc, MediaTek → MediaTek, Qualcomm → Qualcomm).
+2. **Android:** Желательно **та же версия** (Android 13 → Android 13). С разными версиями — высокий риск бутлупа.
+3. **Оболочка:** Не имеет значения! Мы берём **только system**, а vendor оставляем свой.
+
+---
+
+## 🧠 Важная теория: что откуда берём
+
+| Раздел | Откуда берём | Почему |
+|--------|---------------|--------|
+| **system** | **Донор** | Сама прошивка (интерфейс, приложения) |
+| **system_ext** | **Донор** | Системные расширения (часть прошивки) |
+| **product** | **Донор** | Продуктовый раздел (часть прошивки) |
+| **vendor** | **Свой сток** | **ВАЖНО!** Драйверы железа (камера, сенсор, связь) |
+| **odm** | **Свой сток** | Драйверы производителя (если есть) |
+| **vendor_dlkm** | **Свой сток** | Модули ядра (если есть) |
+| **boot** | **Свой сток** | Ядро (можно заменить на permissive при необходимости) |
+| **vbmeta** | **Свой сток** | Для отключения верификации |
+
+> **⚠️ КРИТИЧЕСКИ ВАЖНО:** В раздел **system_ext от ДОНОРА** нужно **обязательно** скопировать папку **APEX из своего СТОКОВОГО system_ext**. Иначе будут проблемы с совместимостью!
+
+---
+
+## 1️⃣ UKA (на телефоне)
+
+### Подготовка
+1. Установи **MT Manager** и **Termux**.
+2. Скачай прошивку-донор (например, HyperOS).
+3. Если прошивка в `payload.bin` — распакуй её через **MT Manager** (он умеет открывать payload) и извлеки `system.img`, `system_ext.img`, `product.img`.
+4. Скопируй эти `.img` файлы в рабочую папку UKA:  
+   **`/data/local/UnpackerSystem`**
+
+### Запуск
+Открой **Termux** и дай root-доступ:
+```su -c menu```
 
 
-# Зачем портировать прошивки, если есть уже собранные?
-Ответ: Не все телефоны хорошо поддерживаются сообществом и не все имееют даже неоффициальную сборку TWRP, в которой работают все функции.
-Портировать кастомную прошивку можно и без TWRP, просто собрав новый super.img в котором и будет наш порт, а если есть TWRP, который хоть что-то умеет прошивать то можно собрать прошиваемый .zip архив.
+Распаковка
 
- # 🛠️ Инструменты которые нам нужны
- [UKA ( Unpacker Kitchen for Android )](https://4pda.to/forum/index.php?showtopic=900084)
+В меню выбери:
 
- [MIK ( Multi Image Kitchen ) только для Windows](https://github.com/CryptoNickSoft/MIK)
+    3 → 1 (Unpack system.img)
 
- [MIO Kitchen Linux/Windows](https://github.com/ColdWindScholar/MIO-KITCHEN-SOURCE)
- 
- [Termux](https://github.com/termux/termux-app/releases), если портируем на телефоне
- 
- [Platform-tools ( Adb & Fastboot )](https://developer.android.com/tools/releases/platform-tools)
+Повтори для system_ext.img и product.img.
+Кухня покажет, в каком формате образы (EXT4 или EROFS).
+Редактирование
 
- 
- Телефон на который будем портировать
- 
- ___В моём случае это Tecno Pova 5 [LH7n/Rozen]___
+    В папке /data/local/UnpackerSystem появились папки с распакованными образами.
 
- 
-[![pova-5.png](https://i.postimg.cc/K80bbpWZ/pova-5.png)](https://postimg.cc/18V2cBPT)
+    Открой их через MT Manager.
 
-# Выбор прошивки, которую будем портировать
-Для портирования прошивок A15 qpr1 и ниже подойдёт ваш стоковый vendor, но для того чтобы запусть А15 qpr2 нужен oss vendor, его можно взять из любой кастомной прошивки под ваш телефон.
-Прошивку для портирования желательно брать с похожего на ваш телефон телефон, я портировал с Tecno Pova 4 на Tecno Pova 5, но также можно взять и прошивку с любого друго телефона, но желательно с тем же чипсетом и стоит у вас или хотябы портирвать с MTK на MTK также и с процессорам Qualcomm.
+    ВАЖНО: В папку system_ext от донора скопируй папку apex из своего стокового system_ext (предварительно распакованного отдельно).
 
+    Отредактируй build.prop в папках system, system_ext, product:
 
-# Портируем используя UKA ( Портируем на телефоне )
-Как файловый менеджер лучше всего использовать MT-manger, он работает как Toltal Commander в два окна, что очень удобно.
-Я буду портирвать Evolution X 10.3 c Tecno Pova 4.
-Скачиваем прошивку в моём случае она запакована в payload.bin, MT-manager позволяет открывать такие файлы, по этому я просто достаю из payload нужные для портирования 3 раздела это: __system.img, system_ext.img, product.img, далее перемещаем эти .img в рабочую папку UKA __/data/local/UnpackerSystem. Теперь открываем _Termux_ и даём ему ROOT доступ 
-```
-su
-```
-Далее 
-```
-menu
-```
-Мы попали в кухню.
+        Пропиши модель своего телефона (например, ro.product.model=Infinix X6525)
 
-[![photo-2025-08-30-13-32-12.jpg](https://i.postimg.cc/5y8Rz981/photo-2025-08-30-13-32-12.jpg)](https://postimg.cc/N2fDqcNP)
+        Пропиши свой fingerprint (скопируй из стокового build.prop)
 
-Сейчас нас интересует распаковка наших образов которые мы ранее положили в рабочую папку UKA.
-Переходим по пунктам 3-1 и распаковываем образы при распаковке кухня покажет в каком формате собраны образы в EXT4 или EROFS.
-После распаковки образов возврааемся в папку куда распаковались образы - /data/local/UnpackerSystem, если обрызы были в EROFS, то кухня создать одноименную папку, в которой буду находиться распакованные образы.
+Упаковка
 
-# Редактирование образов
-Первым делом редактируем build.prop'ы прописываем своё устройсвто везде где упоминеться модель устройства, с которого портируем, если есть какието фиксы для исправления багов, то применяем их добавляем плюшки по типу Battarey Honey или добавляем нужные модули Magisk напрямую в систему.
- Теперь переходим к system_ext, прежде чем его запаковывать после редактирования, вы должны поместить в него папку APEX из стокового system_ext.img, а после можно запаковывать отредактированные образы. 
- В UKA переходим по пунктам: 7-2 ( сборка в raw , теперь внимательно смотри новые пункты нам нужно собрать новые образы в EROFS, если образы от из кастомной прошивки имели формат EROFS, то выбираем пункт 6 сборка из EROFS в EROFS, а если в EXT4, то выбираем сборку из EXT4 в EROFS. Выбор файловой системы зависит от вашего устройтсва у Pova 5 стоковые разделы по умолчанию идут EROFS, следовательно собираем новые разделы в EROFS. Если портируете с GAPPS, то собираете прошивку в EROFS  обязательно.
+Вернись в Termux → menu → 7 → 2 (Pack in raw).
+Выбери тип упаковки:
 
- # Сборка нового super.img
-Удаляем старые образы и оставляем только образы с припиской _new.
-Теперь нам нужна стоковая прошивка, а именно стоковый супер, который распаковываем через UKA по пунктам 3-2.
-Удаляем из стокового _super_ system.img, system_ext.img, product.img, а на их место копируем новые образы, которые только что получили. Далее переходим в кухню и идёем по пунктам: 7-3-1 (сборка в sparse) собираем новый super.img он будет в папке _out_ и это всё порт готов.
+    Если образы были EROFS → пункт 6 (из EROFS в EROFS)
 
-# Прошивка super.img с портом 
-___Прошивка через Bootloader___
-1) подключаем телефон к пк, предварительно включив отладку по USB
-2)  перезагружаемся в Fastboot __НЕ В FastbootD__, это важно, потому что через FastbootD прошиваются разделы, которые находяться внутри _super_
-   ```
+    Если EXT4 → пункт из EXT4 в EROFS (если твой сток использует EROFS)
+
+У тебя появятся файлы с припиской _new.
+Сборка super.img в UKA
+
+    Распакуй стоковый super через UKA: menu → 3 → 2.
+
+    Удали из распакованного super старые system.img, system_ext.img, product.img.
+
+    Скопируй туда новые образы (с припиской _new).
+
+    В UKA: menu → 7 → 3 → 1 (сборка в sparse).
+
+    Новый super появится в папке _out.
+
+2️⃣ MIK (Windows)
+Установка
+
+    Скачай MIK с GitHub.
+
+    Распакуй в корень диска C:\MIK.
+
+    Запусти MIK.exe.
+
+Портируем
+
+    Распакуй скачанную прошивку-донор.
+
+    Вытащи из неё system.img, system_ext.img, product.img.
+
+    Распакуй эти образы через MIK.
+
+Редактирование
+
+    В build.prop'ах пропиши своё устройство (модель, fingerprint).
+
+    ОБЯЗАТЕЛЬНО в system_ext от донора скопируй папку APEX из стокового system_ext (его тоже распакуй через MIK).
+
+    Распакуй стоковый super, удали из него system.img, system_ext.img, product.img.
+
+    Скопируй новые образы в super.
+
+    Если нужно, в стоковый vendor можно добавить Battery Honey.
+
+    Собери новый super в sparse (для прошивки через fastboot) или в raw (для TWRP).
+
+    ⚠️ ВАЖНО: MIK не умеет менять файловую систему. Он упакует в ту же ФС, что была у исходного образа.
+
+3️⃣ MIO Kitchen (Windows/Linux)
+📥 Установка
+
+    Скачай последнюю версию MIO Kitchen
+
+    Распакуй архив (желательно в корень диска C:\ или в папку без пробелов)
+
+    Запусти:
+
+        Windows: дважды кликни MIOKitchen.exe
+
+        Linux: сделай .AppImage исполняемым и запусти
+
+🏗️ Шаг 1: Создаём проекты
+
+ВАЖНО: Нужно создать ДВА ОТДЕЛЬНЫХ ПРОЕКТА:
+
+    Проект STOCK — для стоковой прошивки
+
+    Проект PORT — для прошивки-донора
+
+Создаём проект STOCK:
+
+    Нажми "Create Project"
+
+    Назови, например, Infinix_Stock
+
+    Укажи папку для проекта
+
+    При запросе super.img выбери super.img из стоковой прошивки
+
+Создаём проект PORT:
+
+    Снова нажми "Create Project"
+
+    Назови, например, HyperOS_Port
+
+    Укажи другую папку
+
+    При запросе super.img выбери super.img из прошивки-донора
+
+📤 Шаг 2: Распаковываем образы
+В проекте PORT:
+
+    Перейди в "Image Tools" → "Unpack"
+
+    Распакуй образы донора:
+
+        system.img → в папку project/system
+
+        system_ext.img → в project/system_ext
+
+        product.img → в project/product
+
+В проекте STOCK:
+
+    Распакуй только system_ext.img из стока:
+
+        system_ext.img → в project/system_ext (нужно для APEX)
+
+✏️ Шаг 3: Редактируем
+
+    Замени APEX:
+
+        Из проекта STOCK (папка system_ext/apex) скопируй папку apex
+
+        Вставь в проект PORT (папка system_ext/), заменив существующую
+
+    Отредактируй build.prop в проекте PORT:
+
+        project/system/build.prop
+
+        project/system_ext/build.prop
+
+        project/product/build.prop
+
+    Пропиши модель своего телефона и обязательно замени fingerprint на стоковый!
+
+📥 Шаг 4: Упаковываем образы
+
+В проекте PORT:
+
+    Перейди в "Repack" → "Pack from folder"
+
+    Упакуй каждую папку обратно в .img:
+
+        Из system → system.img
+
+        Из system_ext → system_ext.img
+
+        Из product → product.img
+
+Все новые образы появятся в папке _output.
+🧩 Шаг 5: Собираем финальный super.img
+
+    В проекте PORT перейди в "Super Image Tools" → "Repack Super"
+
+    Укажи:
+
+        Source super file: путь к super.img из проекта PORT (который ты указал при создании)
+
+        New images folder: путь к папке _output (там лежат новые system.img и т.д.)
+
+    Нажми "Repack"
+
+Готовый super_new.img появится в папке _output.
+📱 Прошивка готового порта
+Через Bootloader (fastboot)
+
+    Перезагрузи телефон в fastboot:
+    bash
+
 adb reboot bootloader
-```
-3) Находясь в режиме Fastboot прошиваем наш super.img, который скинули на пк в папку platfrorm-tools
-   ```
-   fastboot flash super super.img
-   ```
- 4) Далее форматируем дату
-   ```
-   Fastboot -w
-   ```
- 5) Перезагружаемся в систему
-   ```
-   fastboot reboot
-   ```
-   Если видим ошибку dm-verify corrupt, то отключаем вбмету (эта команда подходит для Pova 5 )
-   ```
-   fastboot --disable-verity flash vbmeta vbmeta.img
-   ```
-   ___Прошивка через TWRP/OFRP___
-   
-  1) Перезагружаемся в рекавери через Magisk или через adb
-     
-   ```
-   adb reboot recovery
-   ```
-   1.1) __Делаем backup стокового super__
 
-   2) Прошиваем super.img с портом
-   3) Форматируем дату
-   4) Перезагружаемся в систему
+    ⚠️ ВАЖНО: Нужен именно fastboot, а не fastbootd!
 
-# Портируем используя MIK на пк с Windows
+Прошей новый super:
+bash
 
-[![PXtibz0-Urq-Wny2-Rz0-CKgz1qm-Pt-J2s-J5z0-F4-Wa-DD.png](https://i.postimg.cc/zXQ8hgx5/PXtibz0-Urq-Wny2-Rz0-CKgz1qm-Pt-J2s-J5z0-F4-Wa-DD.png)](https://postimg.cc/yk0M4kqr)
+fastboot flash super super_new.img
 
- ___Устанавливаем MIK___
- 1) Скачиваем
- 2) Распаковываем ( желательно в корень диска C )
- 3) Запускаем
+Сотри данные:
+bash
 
-___Портируем___
+fastboot -w
 
-1) Распаковываем скачанную прошивку
-2) Вытаскиваем из прошивки _system.img, system_ext, product.img___
-3) Распаковываем через MIK
+Перезагрузись:
+bash
 
-___Редактируем образы___
- 1) В build.prop'ах прописываем своё устройство
- 2) __ОБЯЗТЕЛЬНО__ в system_ext от портируемой прошивки копируем папку __APEX__ из стоквого system_ext ( его точно также распаковываем через MIK )
- 3) ~~После редактирования собираем образы в той файловой системе, в которой собраны образы стоковой прошивки~~ Поправка: ___MIK не умеет собирать образы в файловых системах отличных от той, что использует оригинальный обрз.
- 5) Распаковываем стоковый супер удаляем из него system.img, system_ext.img, product.img
- 6) Копируем новые образы в super
- 7) Если нужно в стоковый vendor можно добавить Battarey Honey
- 8) Собираем новый super в sparse, для прошивки через TWRP/OFRP можно собирать в raw
+fastboot reboot
 
-___Прошиваем порт___
+Если ошибка dm-verify corrupt — отключи верификацию:
+bash
 
-___Прошивка через Bootloader___
-1) подключаем телефон к пк, предварительно включив отладку по USB
-2)  перезагружаемся в Fastboot __НЕ В FastbootD__, это важно, потому что через FastbootD прошиваются разделы, которые находяться внутри _super_
-   ```
-adb reboot bootloader
-```
-3) Находясь в режиме Fastboot прошиваем наш super.img, который скинули на пк в папку platfrorm-tools
-   ```
-   fastboot flash super super.img
-   ```
- 4) Далее форматируем дату
-   ```
-   Fastboot -w
-   ```
- 5) Перезагружаемся в систему
-   ```
-   fastboot reboot
-   ```
-   Если видим ошибку dm-verify corrupt, то отключаем вбмету (эта команда подходит для Pova 5 )
-   ```
-   fastboot --disable-verity flash vbmeta vbmeta.img
-   ```
-   ___Прошивка через TWRP/OFRP___
-   
-  1) Перезагружаемся в рекавери через Magisk или через adb
-     
-   ```
-   adb reboot recovery
-   ```
-   1.1) __Делаем backup стокового super__
+fastboot --disable-verity flash vbmeta vbmeta.img
 
-   2) Прошиваем super.img с портом
-   3) Форматируем дату
-   4) Перезагружаемся в систему
+    (повтори для vbmeta_system, vbmeta_vendor, если есть)
 
-# Портируем используя MIO на пк с Linux/Windows
+Через TWRP/OFRP
 
+    Перезагрузи в рекавери:
 
+    adb reboot recovery
 
-    
+    ОБЯЗАТЕЛЬНО сделай backup раздела super.
 
+    Прошей super_new.img (в TWRP: Install → Install Image → выбери super.img → выбери раздел super).
 
- 
+    Сделай Format Data (не просто wipe, а именно format).
+
+    Перезагрузись.
+
+🆘 Решение проблем
+Проблема	Решение
+Бутлуп на лого	Прошей boot-permissive.img
+Ошибка dm-verify	Прошей vbmeta с флагами --disable-verity --disable-verification
+Телефон не видит SIM	Проблема с RIL — нужна замена libs в vendor
+Не работает камера	Замени библиотеки камеры из стока в vendor
+WiFi не включается	Замени модули WiFi из стока в vendor_dlkm
+Гугл сервисы крашатся	Проверь fingerprint в build.prop
+Не хватает места в super	Уменьши размер system (удали лишние приложения/обои)
+🙏 Благодарности
+
+    Andreyka445 — за основу инструкции
+
+    ColdWindScholar — за MIO Kitchen
+
+    CryptoNickSoft — за MIK
+
+    Сообщество 4PDA — за бесценный опыт
+
+Удачи в портировании! 🚀
